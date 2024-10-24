@@ -1,0 +1,93 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiProduct
+metadata:
+  labels:
+    app: tracks-rest-api-1.0
+    expose-portal: "true"
+  name: tracks
+  namespace: tracks
+spec:
+  id: Catstronauts
+  displayName: Catstronauts REST API
+  customMetadata:
+    image: <url>
+    pii-sensitive: "true"
+    api-category: "demo"
+  versions:
+    - apiVersion: "1.0"
+      targetRefs:
+      - name: tracks-v1-apiproduct
+        namespace: tracks
+        group: gateway.networking.k8s.io
+        kind: HTTPRoute
+      openapiMetadata:
+        title:  "catstronauts"
+        description: REST API for Catstronauts to retrieve data for tracks, authors and modules.
+        termsOfService: |
+          These Terms of Service ("ToS") govern your access to and use of Catstronauts REST API (the "API"), provided by solo.io ("Provider," "we," or "us").
+          By using the API, you agree to comply with these ToS. If you do not agree with any of the terms outlined herein, you must refrain from accessing or using the API.
+        contact: catstronauts-support@solo.io
+        license: |
+          Catstronauts REST API License
+
+          Version 1.0
+
+          This Catstronauts REST API License ("License") is a legal agreement between you (either an individual or a legal entity) and solo.io ("Provider") for the use of the Catstronauts REST API ("API").
+      customMetadata:
+        phase: supported`
+    - apiVersion: "2.0"
+      targetRefs:
+        - name: tracks-v2-apiproduct
+          namespace: tracks
+          group: gateway.networking.k8s.io
+          kind: HTTPRoute
+      openapiMetadata:
+        title:  "catstronauts"
+        description: REST API for Catstronauts to retrieve data for tracks, authors and modules.
+        termsOfService: |
+          These Terms of Service ("ToS") govern your access to and use of Catstronauts REST API (the "API"), provided by solo.io ("Provider," "we," or "us").
+          By using the API, you agree to comply with these ToS. If you do not agree with any of the terms outlined herein, you must refrain from accessing or using the API.
+        contact: catstronauts-support@solo.io
+        license: |
+          Catstronauts REST API License
+
+          Version 1.0
+
+          This Catstronauts REST API License ("License") is a legal agreement between you (either an individual or a legal entity) and solo.io ("Provider") for the use of the Catstronauts REST API ("API").
+      customMetadata:
+          phase: supported
+
+
+
+
+
+
+
+
+
+
+  # portalMetadata:
+  #   apiProductId: Catstronauts
+  #   apiVersion: "1.0"
+  #   title: Catstronauts REST API
+  #   description: REST API for Catstronauts to retrieve data for tracks, authors and modules.
+  #   lifecycle: production
+  #   termsOfService: |
+  #     These Terms of Service ("ToS") govern your access to and use of Catstronauts REST API (the "API"), provided by solo.io ("Provider," "we," or "us").
+  #     By using the API, you agree to comply with these ToS. If you do not agree with any of the terms outlined herein, you must refrain from accessing or using the API.
+  #   contact: catstronauts-support@solo.io
+  #   license: |
+  #     Catstronauts REST API License
+
+  #     Version 1.0
+
+  #     This Catstronauts REST API License ("License") is a legal agreement between you (either an individual or a legal entity) and solo.io ("Provider") for the use of the Catstronauts REST API ("API").
+  #   customMetadata:
+  #     pii-sensitive: "true"
+  #     api-category: "demo"
+  #     phase: supported
+  # targetRefs:
+  # - group: gateway.networking.k8s.io
+  #   kind: HTTPRoute
+  #   name: tracks-apiproduct
+  #   namespace: tracks

@@ -1,0 +1,46 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: api-example-com-root-route
+  namespace: gloo-system
+  labels:
+    app: apis
+spec:
+  parentRefs:
+    - name: gw
+      namespace: ingress-gw
+      # Bind to a specific listener in the parentRef (Gateway) using sectionName field.
+      # sectionName: foo
+  hostnames:
+    - "api.example.com"
+  rules:
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /trackapi/v1.0/
+      backendRefs:
+      # Delegate to another HTTPRoute
+      - group: gateway.networking.k8s.io
+        kind: HTTPRoute
+        name: tracks-v1-apiproduct
+        namespace: tracks
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /trackapi/v2.0/
+      backendRefs:
+      # Delegate to another HTTPRoute
+      - group: gateway.networking.k8s.io
+        kind: HTTPRoute
+        name: tracks-v2-apiproduct
+        namespace: tracks
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /httpbin/v1.0/
+      backendRefs:
+      # Delegate to another HTTPRoute
+      - group: gateway.networking.k8s.io
+        kind: HTTPRoute
+        name: httpbin-apiproduct
+        namespace: httpbin

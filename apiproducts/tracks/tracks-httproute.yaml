@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: tracks
+  namespace: tracks
+  labels:
+    app: tracks-rest-api-1.0
+  annotations:
+    delegation.gateway.solo.io/inherit-parent-matcher: "true"
+spec:
+  rules:
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /
+      backendRefs:
+      - name: tracks-rest-api-1-0
+        namespace: tracks
+        port: 5000

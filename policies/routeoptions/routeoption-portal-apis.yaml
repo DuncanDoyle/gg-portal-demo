@@ -1,0 +1,30 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: routeoption-portal-apis
+  namespace: gloo-system
+spec:
+  options:
+    cors:
+      allowCredentials: true
+      allowHeaders:
+      - '*'
+      allowMethods:
+      - GET
+      - OPTIONS
+      allowOrigin:
+      - '*'
+      # allowOriginRegex:
+      # - .*
+    extauth:
+      configRef:
+        name: portal-apis
+        namespace: gloo-system
+    # rateLimitConfigs:
+    #   refs:
+    #   - name: limit-apis
+    #     namespace: gloo-system
+  # targetRefs:
+  # - group: gateway.networking.k8s.io
+  #   kind: HTTPRoute
+  #   name: bookinfo

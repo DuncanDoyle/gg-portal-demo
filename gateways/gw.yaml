@@ -1,0 +1,39 @@
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: gw
+  namespace: ingress-gw
+spec:
+  gatewayClassName: gloo-gateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          # from: Same
+          # from: All
+          from: Selector # Only allow routes from namespaces with the following label set.
+          selector:
+            matchLabels:
+              shared-gateway-access: "true"
+        # Define which kinds of routes we accept
+        # kinds:
+    # - name: https
+    #   port: 443
+    #   protocol: HTTPS
+    #   # hostname: https.example.com
+    #   tls:
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - name: https
+    #         namespace: gloo-system
+    #         kind: Secret
+    #   allowedRoutes:
+    #     namespaces:
+    #       # from: Same
+    #       # from: All
+    #       from: Selector # Only allow routes from namespaces with the following label set.
+    #       selector:
+    #         matchLabels:
+    #           shared-gateway-access: "true"

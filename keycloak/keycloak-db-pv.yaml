@@ -1,0 +1,32 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-keycloak-pv
+  namespace: keycloak
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: "standard"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mnt/keycloak/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-keycloak-pvc
+  namespace: keycloak
+  labels:
+    app: postgres
+spec:
+  storageClassName: "standard"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

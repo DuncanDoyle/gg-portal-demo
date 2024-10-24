@@ -1,0 +1,30 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: portal
+  namespace: gloo-system
+spec:
+  configs:
+  - oauth2:
+      oidcAuthorizationCode:
+        appUrl: http://developer.example.com
+        callbackPath: /v1/login
+        clientId: portal-client
+        clientSecretRef:
+          name: oauth
+          namespace: gloo-system
+        headers:
+          idTokenHeader: id_token
+        issuerUrl: http://keycloak.example.com/realms/gloo-demo/
+        logoutPath: /v1/logout
+        scopes:
+        - email
+        session:
+          failOnFetchFailure: true
+          # Needed because we host this demo on http instead of https.
+          cookieOptions:
+            notSecure: true
+          redis:
+            cookieName: keycloak-session
+            options:
+              host: redis:6379

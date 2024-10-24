@@ -1,0 +1,72 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: portal-server
+  namespace: gloo-system
+spec:
+  parentRefs:
+    - name: gw
+      namespace: ingress-gw
+      sectionName: http
+  hostnames:
+    - developer.example.com
+  rules:
+  # Route that's used for machine-to-machine when we use Bearer tokens.
+  - matches:
+    - headers:
+      - name: Authorization
+        type: RegularExpression
+        value: Bearer\s.*
+      path:
+        type: PathPrefix
+        value: /v1
+    filters:
+    - extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-portal-apis
+      type: ExtensionRef
+    backendRefs:
+    - group: ""
+      kind: Service
+      name: gateway-portal-web-server
+      port: 8080
+      weight: 1
+  # Route that's used for interactive (UI) when we use keycloak-sessio cookies.
+  - matches:
+    - headers:
+      - name: Cookie
+        type: RegularExpression
+        value: .*?keycloak-session=.*
+      path:
+        type: PathPrefix
+        value: /v1
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-portal
+    backendRefs:
+    - group: ""
+      kind: Service
+      name: gateway-portal-web-server
+      port: 8080
+      weight: 1
+  # Route that is used when no authentication scheme is present.
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v1
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-portal-cors
+    backendRefs:
+    - group: ""
+      kind: Service
+      name: gateway-portal-web-server
+      port: 8080
+      weight: 1

@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apis
+  namespace: gloo-system
+data:
+  policy.rego: |-
+    package test
+    import future.keywords.if
+    default allow = false
+
+    # Get the accessed ApiProductId from the metadata
+    filter_metadata := input.check_request.attributes.metadata_context.filter_metadata
+    apimanagement_metadata := filter_metadata["io.solo.gloo.portal"]
+    api_product_id := apimanagement_metadata.api_product_id
+    # Get the api key from the request
+    api_key := input.http_request.headers["api-key"]
+    # Get the access token from the Authorization header
+    access_token := trim_prefix(input.http_request.headers["authorization"], "Bearer ")
+    # Determine which authentication method to use
+    # Format the metadata URL based on the authentication method
+    metadata_url := sprintf("%s?apiKey=%s&apiProductId=%s", ["http://gateway-portal-web-server.gloo-system.svc.cluster.local:8080/v1/metadata", api_key, api_product_id]) if {
+      api_key
+      not access_token
+    }
+    metadata_url := sprintf("%s?accessToken=%s&apiProductId=%s", ["http://gateway-portal-web-server.gloo-system.svc.cluster.local:8080/v1/metadata", access_token, api_product_id]) if {
+      access_token
+      not api_key
+    }
+    # Send a request to the metadata server to get the metadata
+    metadata_resp := http.send({
+        "method": "GET",
+        "url": metadata_url,
+        "cache": true,
+        "force_cache": true,
+        "force_cache_duration_seconds": 60
+    })
+    # Allow if the credential has access to the api product
+    allow if {
+      metadata_resp.body.allowed = true
+    }
+    http_status := 200 if {
+      allow
+    }
+    http_status := 401 if {
+      input.http_request.headers["api-key"] == ""
+    }
+
+    http_status := 403 if {
+      not allow
+    }
+
+    # Set dynamic rate limits
+    dynamic_metadata["rateLimit"] := {
+      "requests_per_unit": to_number(metadata_resp.body.rateLimit.requestsPerUnit),
+      "unit": metadata_resp.body.rateLimit.unit
+    } if metadata_resp.body.rateLimit
+
+    # Set dynamic custom metadata
+    dynamic_metadata["customMetadata"] := metadata_resp.body.customMetadata if metadata_resp.body.customMetadata
+
+    result["dynamic_metadata"] := dynamic_metadata
+    result["allow"] := allow
+    result["http_status"] := http_status

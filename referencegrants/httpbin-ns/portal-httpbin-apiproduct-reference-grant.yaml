@@ -1,0 +1,13 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: portal-httpbin-apiproduct-reference-grant
+  namespace: httpbin
+spec:
+  from:
+    - group: portal.gloo.solo.io
+      kind: Portal
+      namespace: gloo-system
+  to:
+    - group: portal.gloo.solo.io
+      kind: ApiProduct

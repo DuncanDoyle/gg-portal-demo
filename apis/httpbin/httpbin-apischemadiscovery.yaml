@@ -1,0 +1,18 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiSchemaDiscovery
+metadata:
+  name: httpbin-apischemadiscovery
+  namespace: httpbin
+spec:
+  openapi:
+    fetchEndpoint:
+      url: https://raw.githubusercontent.com/solo-io/solo-blog/main/zero-to-gateway/httpbin-openapi.json
+      retryDelay: "1s"
+      pullAttempts: 30
+      useBackoff: false
+  servedBy:
+    - targetRef:
+        kind: Service
+        name: httpbin
+        namespace: httpbin
+      port: 8000

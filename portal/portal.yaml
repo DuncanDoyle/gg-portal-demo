@@ -1,0 +1,22 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: Portal
+metadata:
+  name: portal
+  namespace: gloo-system
+spec:
+  visibility:
+    public: true
+  # domains:
+  #   - developer.example.com
+  apiProducts:
+    - name: "*"
+      namespace: tracks
+    - name: httpbin
+      namespace: httpbin
+    # - name: petstore
+    #   namespace: petstore
+  # portalBackendSelectors:
+  #   - selector:
+  #       namespace: gloo-system
+  #       labels:
+  #         app: gateway-portal-web-server

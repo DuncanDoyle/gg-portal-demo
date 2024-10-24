@@ -1,0 +1,13 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: apiproducts
+  namespace: gloo-system
+spec:
+  configs:
+    - name: opa
+      opaAuth:
+        modules:
+          - name: apis
+            namespace: gloo-system
+        query: "data.test.result"

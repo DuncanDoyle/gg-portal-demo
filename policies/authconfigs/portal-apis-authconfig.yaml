@@ -1,0 +1,14 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: portal-apis
+  namespace: gloo-system
+spec:
+  # AuthConfig for Portal APIs
+  configs:
+  - oauth2:
+      accessTokenValidation:
+        jwt:
+          remoteJwks:
+            # url: http://keycloak.example.com/realms/portal-mgmt/protocol/openid-connect/certs
+            url: http://keycloak.example.com/realms/gloo-demo/protocol/openid-connect/certs
