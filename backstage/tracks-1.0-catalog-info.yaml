@@ -11,4 +11,4 @@ spec:
   lifecycle: production
   owner: group:track-managers
   providesApis:
-    - default/4b574ec2-0440-4cd4-818d-b9baab503372
+    - default/734b4b65-e9c6-422c-a8c8-96d150b72ad1
