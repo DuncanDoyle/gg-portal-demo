@@ -150,7 +150,7 @@ EOF
 EOF
 
   printf "\nDeploying Backstage.\n"
-  helm upgrade --install gp-portal-demo-backstage ddoyle-gloo-demo/gp-portal-demo-backstage --namespace backstage --create-namespace --version 0.1.4 \
+  helm upgrade --install gp-portal-demo-backstage ddoyle-gloo-demo/gp-portal-demo-backstage --namespace backstage --create-namespace --version 0.1.8 \
   --set kubernetes.skipTLSVerify=true
 
 fi

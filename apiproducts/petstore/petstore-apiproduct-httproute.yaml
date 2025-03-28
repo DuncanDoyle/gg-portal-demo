@@ -1,0 +1,63 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: petstore-apiproduct
+  namespace: petstore
+  labels:
+    app: petstore-rest-api
+  annotations:
+    delegation.gateway.solo.io/inherit-parent-matcher: "true"
+spec:
+  # parentRefs:
+  #   - name: gw
+  #     namespace: ingress-gw
+  #     # Bind to a specific listener in the parentRef (Gateway) using sectionName field.
+  #     # sectionName: foos
+  # hostnames:
+  #   - "petstore.example.com"
+  rules:
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /pet
+      filters:
+      # Need to specify the URLRewrite here because of a bug in the stitching logic of the Portal controller.
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /pet
+      backendRefs:
+      - name: pets-rest-api
+        namespace: petstore
+        port: 5000
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /user
+      filters:
+      # Need to specify the URLRewrite here because of a bug in the stitching logic of the Portal controller.
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /user
+      backendRefs:
+      - name: users-rest-api
+        namespace: petstore
+        port: 5000
+    - matches:  
+      - path:
+          type: PathPrefix
+          value: /store
+      filters:
+      # Need to specify the URLRewrite here because of a bug in the stitching logic of the Portal controller.
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /store
+      backendRefs:
+      - name: store-rest-api
+        namespace: petstore
+        port: 5000

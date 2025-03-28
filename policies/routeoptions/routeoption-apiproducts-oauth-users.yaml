@@ -1,0 +1,30 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: routeoption-apiproducts-users
+  namespace: gloo-system
+spec:
+  # targetRefs:
+  # - group: gateway.networking.k8s.io
+  #   kind: HTTPRoute
+  #   name: bookinfo
+  options:
+    # ExtAuth configuration. OAuth AccessToken Validation and OPA
+    extauth:
+      configRef:
+        name: apiproducts-atv-users
+        namespace: gloo-system
+    cors:
+      allowCredentials: true
+      allowHeaders:
+      - "*"
+      allowMethods:
+      - GET
+      - OPTIONS
+      allowOriginRegex:
+      - ".*"
+    # Rate limit configuration
+    rateLimitConfigs:
+      refs:
+      - name: apiproducts-dynamic
+        namespace: gloo-system

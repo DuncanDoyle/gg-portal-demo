@@ -1,0 +1,37 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiProduct
+metadata:
+  labels:
+    app: petstore-rest-api
+    expose-portal: "true"
+  name: petstore
+  namespace: petstore
+spec:
+  id: Petstore
+  displayName: Petstore REST API
+  customMetadata:
+    image: <url>
+    pii-sensitive: "true"
+    api-category: "demo"
+  versions:
+    - apiVersion: "1.0"
+      targetRefs:
+      - name: petstore-apiproduct
+        namespace: petstore
+        group: gateway.networking.k8s.io
+        kind: HTTPRoute
+      openapiMetadata:
+        title:  "petstore"
+        description: REST API for Petstore to retrieve pets, stores and users.
+        termsOfService: |
+          These Terms of Service ("ToS") govern your access to and use of Petstore REST API (the "API"), provided by solo.io ("Provider," "we," or "us").
+          By using the API, you agree to comply with these ToS. If you do not agree with any of the terms outlined herein, you must refrain from accessing or using the API.
+        contact: petstore-support@solo.io
+        license: |
+          Petstore REST API License
+
+          Version 1.0
+
+          This Petstore REST API License ("License") is a legal agreement between you (either an individual or a legal entity) and solo.io ("Provider") for the use of the Catstronauts REST API ("API").
+      customMetadata:
+        phase: supported

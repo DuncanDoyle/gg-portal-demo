@@ -12,7 +12,7 @@ spec:
     # ExtAuth configuration. OAuth AccessToken Validation and OPA
     extauth:
       configRef:
-        name: apiproducts-atv-opa
+        name: apiproducts-atv-portalauth
         namespace: gloo-system
     cors:
       allowCredentials: true
@@ -20,6 +20,7 @@ spec:
       - "*"
       allowMethods:
       - GET
+      - OPTIONS
       allowOriginRegex:
       - ".*"
     # Rate limit configuration

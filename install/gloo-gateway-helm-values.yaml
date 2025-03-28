@@ -4,22 +4,21 @@ gloo:
     enabled: true
   gatewayProxies:
     gatewayProxy:
-      # ddoyle: Not able to set this to "true" (i.e. disable the default proxy deployment), as that gives an error with the Helm templates ...
-      disabled: false
-      healthyPanicThreshold: 0
-      gatewaySettings:
-        # Disable the default Edge Gateway CRs from being created
-        enabled: false
-        disableGeneratedGateways: true
-      kind:
-        deployment:
-          replicas: 1
-      service:
-        # Set this to different ports, so we can use port 80 on our K8S Gateway API proxy ....
-        httpPort: 81
-        httpsFirst: true
-        httpsPort: 444
-        type: LoadBalancer
+      disabled: true
+      # healthyPanicThreshold: 0
+      # gatewaySettings:
+      #   # Disable the default Edge Gateway CRs from being created
+      #   enabled: false
+      #   disableGeneratedGateways: true
+      # kind:
+      #   deployment:
+      #     replicas: 1
+      # service:
+      #   # Set this to different ports, so we can use port 80 on our K8S Gateway API proxy ....
+      #   httpPort: 81
+      #   httpsFirst: true
+      #   httpsPort: 444
+      #   type: LoadBalancer
   gateway:
     persistProxySpec: true
     logLevel: info
@@ -44,7 +43,8 @@ gloo:
         podMonitorEnabled: "true"
   discovery:
     # We don't need the discovery deployment for our Gloo Gateway demo
-    enabled: false
+    # Actually, we do need to for AWS Lambda discovery for our Upstreams.
+    enabled: true
   rbac:
     namespaced: true
     nameSuffix: gg-demo

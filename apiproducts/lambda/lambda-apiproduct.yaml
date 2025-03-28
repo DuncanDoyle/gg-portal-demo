@@ -1,0 +1,37 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiProduct
+metadata:
+  labels:
+    app: lambda-rest-api-1.0
+    expose-portal: "true"
+  name: lambda
+  namespace: gloo-system
+spec:
+  id: Lambda
+  displayName: Lambda
+  customMetadata:
+    image: <url>
+    pii-sensitive: "true"
+    api-category: "demo"
+  versions:
+    - apiVersion: "1.0"
+      targetRefs:
+      - group: gateway.networking.k8s.io
+        kind: HTTPRoute
+        name: lambda-apiproduct
+        namespace: gloo-system
+      openapiMetadata:
+        title:  "Lambda Greeting Service"
+        description: REST API for AWS Lambda service that greets the user.
+        termsOfService: |
+          These Terms of Service ("ToS") govern your access to and use of Lambda REST API (the "API"), provided by solo.io ("Provider," "we," or "us").
+          By using the API, you agree to comply with these ToS. If you do not agree with any of the terms outlined herein, you must refrain from accessing or using the API.
+        contact: lambda-support@solo.io
+        license: |
+          Lambda REST API License
+
+          Version 1.0
+
+          This Lambda REST API License ("License") is a legal agreement between you (either an individual or a legal entity) and solo.io ("Provider") for the use of the Catstronauts REST API ("API").
+      customMetadata:
+          phase: supported`

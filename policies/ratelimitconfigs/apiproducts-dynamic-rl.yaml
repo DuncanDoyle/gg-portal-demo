@@ -6,12 +6,12 @@ metadata:
 spec:
   raw:
     setDescriptors:
-      - simpleDescriptors:
-          - key: generic_key
-            value: counter
-        rateLimit:
-          requestsPerUnit: 100
-          unit: SECOND
+    - simpleDescriptors:
+      - key: generic_key
+        value: counter
+      rateLimit:
+        requestsPerUnit: 5
+        unit: MINUTE
     rateLimits:
     - setActions:
       - genericKey:
@@ -21,5 +21,5 @@ spec:
           metadataKey:
             key: "envoy.filters.http.ext_authz"
             path:
-            - key: "opa"
+            - key: "tracksAuth"
             - key: "rateLimit"

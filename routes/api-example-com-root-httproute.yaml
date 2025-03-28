@@ -14,33 +14,118 @@ spec:
   hostnames:
     - "api.example.com"
   rules:
-    - matches:  
-      - path:
-          type: PathPrefix
-          value: /trackapi/v1.0/
-      backendRefs:
-      # Delegate to another HTTPRoute
-      - group: gateway.networking.k8s.io
-        kind: HTTPRoute
-        name: tracks-v1-apiproduct
-        namespace: tracks
-    - matches:  
-      - path:
-          type: PathPrefix
-          value: /trackapi/v2.0/
-      backendRefs:
-      # Delegate to another HTTPRoute
-      - group: gateway.networking.k8s.io
-        kind: HTTPRoute
-        name: tracks-v2-apiproduct
-        namespace: tracks
-    - matches:  
-      - path:
-          type: PathPrefix
-          value: /httpbin/v1.0/
-      backendRefs:
-      # Delegate to another HTTPRoute
-      - group: gateway.networking.k8s.io
-        kind: HTTPRoute
-        name: httpbin-apiproduct
-        namespace: httpbin
+  - matches:  
+    - path:
+        type: PathPrefix
+        value: /trackapi/v1.0/
+    filters:
+    # The URLRewrite in the parent technically works (from a "proxy perspective"), 
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-apiproducts
+    backendRefs:
+    # Delegate to another HTTPRoute
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: tracks-v1-apiproduct
+      namespace: tracks
+  - matches:  
+    - path:
+        type: PathPrefix
+        value: /trackapi/v2.0/
+    filters:
+    # The URLRewrite in the parent technically works (from a "proxy perspective"), 
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-apiproducts
+    backendRefs:
+    # Delegate to another HTTPRoute
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: tracks-v2-apiproduct
+      namespace: tracks
+  - matches:  
+    - path:
+        type: PathPrefix
+        value: /httpbin/v1.0/
+    filters:
+    # The URLRewrite in the parent technically works (from a "proxy perspective"), 
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-apiproducts
+    backendRefs:
+    # Delegate to another HTTPRoute
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: httpbin-apiproduct
+      namespace: httpbin
+  - matches:  
+    - path:
+        type: PathPrefix
+        value: /lambda/
+    filters:
+    # The URLRewrite in the parent technically works (from a "proxy perspective"), 
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.c
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-apiproducts
+    backendRefs:
+    # Delegate to another HTTPRoute
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: lambda-apiproduct
+      namespace: gloo-system
+  - matches:  
+    - path:
+        type: PathPrefix
+        value: /petstore/
+    filters:
+    # The URLRewrite in the parent technically works (from a "proxy perspective"), 
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.c
+    # - type: URLRewrite
+    #   urlRewrite:
+    #     path:
+    #       type: ReplacePrefixMatch
+    #       replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-apiproducts
+    backendRefs:
+    # Delegate to another HTTPRoute
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: petstore-apiproduct
+      namespace: petstore

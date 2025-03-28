@@ -16,7 +16,7 @@ kubectl apply -f apis/httpbin/httpbin-apischemadiscovery.yaml
 printf "\nDeploy the HTTPBin HTTPRoute (delegatee) and the HTTP APIProduct ...\n"
 kubectl apply -f apiproducts/httpbin/httpbin-apiproduct-httproute.yaml
 kubectl apply -f apiproducts/httpbin/httpbin-apiproduct.yaml
-kubectl apply -f referencegrants/httpbin-ns/portal-httpbin-apiproduct-reference-grant.yaml
+kubectl apply -f referencegrants/httpbin-ns/portal-gloo-system-apiproduct-rg.yaml
 
 #----------------------------------------- api.example.com route -----------------------------------------
 

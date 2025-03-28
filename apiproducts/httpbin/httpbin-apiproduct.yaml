@@ -15,10 +15,10 @@ spec:
   versions:
     - apiVersion: "v1"
       targetRefs:
-        - name: httpbin-apiproduct
-          namespace: httpbin
-          group: gateway.networking.k8s.io
-          kind: HTTPRoute
+      - name: httpbin-apiproduct
+        namespace: httpbin
+        group: gateway.networking.k8s.io
+        kind: HTTPRoute
       openapiMetadata:
       customMetadata:
           phase: supported

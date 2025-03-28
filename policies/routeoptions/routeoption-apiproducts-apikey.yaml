@@ -1,0 +1,25 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: routeoption-apiproducts
+  namespace: gloo-system
+spec:
+  options:
+    extauth:
+      configRef:
+        name: apiproducts-apikey-portalauth
+        namespace: gloo-system
+    cors:
+      allowCredentials: true
+      allowHeaders:
+      - "*"
+      allowMethods:
+      - GET
+      - OPTIONS
+      allowOriginRegex:
+      - ".*"
+    # Rate limit configuration
+    rateLimitConfigs:
+      refs:
+      - name: apiproducts-dynamic
+        namespace: gloo-system

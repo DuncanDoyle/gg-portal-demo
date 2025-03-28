@@ -12,28 +12,27 @@ spec:
       allowedRoutes:
         namespaces:
           # from: Same
+          from: All
+          # from: Selector # Only allow routes from namespaces with the following label set.
+          # selector:
+          #   matchLabels:
+          #     shared-gateway-access: "true"
+        # Define which kinds of routes we accept
+        # kinds:
+    - name: https
+      port: 443
+      protocol: HTTPS
+      # hostname: https.example.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: https
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          # from: Same
           # from: All
-          from: Selector # Only allow routes from namespaces with the following label set.
+          from: Selector
           selector:
             matchLabels:
               shared-gateway-access: "true"
-        # Define which kinds of routes we accept
-        # kinds:
-    # - name: https
-    #   port: 443
-    #   protocol: HTTPS
-    #   # hostname: https.example.com
-    #   tls:
-    #     mode: Terminate
-    #     certificateRefs:
-    #       - name: https
-    #         namespace: gloo-system
-    #         kind: Secret
-    #   allowedRoutes:
-    #     namespaces:
-    #       # from: Same
-    #       # from: All
-    #       from: Selector # Only allow routes from namespaces with the following label set.
-    #       selector:
-    #         matchLabels:
-    #           shared-gateway-access: "true"
