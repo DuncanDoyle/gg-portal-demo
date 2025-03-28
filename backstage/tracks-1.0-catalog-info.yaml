@@ -11,4 +11,4 @@ spec:
   lifecycle: production
   owner: group:track-managers
   providesApis:
-    - default/catstronauts-1.0
+    - default/485f70db-0cb6-4a68-bebe-d7deef52680b
