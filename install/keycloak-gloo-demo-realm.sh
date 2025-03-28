@@ -333,7 +333,7 @@ CREATE_ADMIN_ONE_JSON=$(cat <<EOM
 }
 EOM
 )
-curl -k -X POST -H "Authorization: Bearer ${KEYCLOAK_TOKEN}"  -H "Content-Type: application/json" -d "$CREATE_USER_TWO_JSON" $KEYCLOAK_URL/admin/realms/$REALM/users
+curl -k -X POST -H "Authorization: Bearer ${KEYCLOAK_TOKEN}"  -H "Content-Type: application/json" -d "$CREATE_ADMIN_ONE_JSON" $KEYCLOAK_URL/admin/realms/$REALM/users
 
 ################################################ Portal Service Account: portal-sa ################################################
 

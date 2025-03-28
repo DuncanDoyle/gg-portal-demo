@@ -1,7 +1,7 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteOption
 metadata:
-  name: routeoption-portal-cors
+  name: routeoption-apiproducts
   namespace: gloo-system
 spec:
   options:

@@ -1,7 +1,7 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteOption
 metadata:
-  name: routeoption-apiproducts
+  name: routeoption-apiproducts-users
   namespace: gloo-system
 spec:
   # targetRefs:
@@ -12,7 +12,7 @@ spec:
     # ExtAuth configuration. OAuth AccessToken Validation and OPA
     extauth:
       configRef:
-        name: apiproducts-atv-portalauth
+        name: apiproducts-atv-users
         namespace: gloo-system
     cors:
       allowCredentials: true

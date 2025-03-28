@@ -1,0 +1,20 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiSchemaDiscovery
+metadata:
+  name: lambda-apischemadiscovery
+  namespace: gloo-system
+spec:
+  openapi:
+    fetchEndpoint:
+      # url: https://openlibrary.org/static/openapi.json
+      url: https://raw.githubusercontent.com/DuncanDoyle/quarkus-lambda-openapi/main/quarkus-lambda-openapi.json
+      retryDelay: "1s"
+      pullAttempts: 30
+      useBackoff: false
+  servedBy:
+    - targetRef:
+        name: my-aws-lambda-upstream
+        namespace: gloo-system
+        group: gloo.solo.io
+        kind: Upstream
+      

@@ -1,0 +1,15 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: my-aws-lambda-upstream
+  namespace: gloo-system
+spec:
+  aws:
+    region: eu-central-1
+    secretRef:
+      name: aws-creds
+      namespace: gloo-system
+    # roleArn: arn:aws:iam::931713665590:role/GlooGatewayAwsLambdaUpstream
+    destinationOverrides:
+      unwrapAsApiGateway: false
+      wrapAsApiGateway: false

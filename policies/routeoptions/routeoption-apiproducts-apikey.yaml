@@ -4,15 +4,10 @@ metadata:
   name: routeoption-apiproducts
   namespace: gloo-system
 spec:
-  # targetRefs:
-  # - group: gateway.networking.k8s.io
-  #   kind: HTTPRoute
-  #   name: bookinfo
   options:
-    # ExtAuth configuration. OAuth AccessToken Validation and OPA
     extauth:
       configRef:
-        name: apiproducts-atv-portalauth
+        name: apiproducts-apikey-portalauth
         namespace: gloo-system
     cors:
       allowCredentials: true

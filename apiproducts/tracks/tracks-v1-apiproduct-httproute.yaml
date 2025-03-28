@@ -14,13 +14,19 @@ spec:
           type: PathPrefix
           value: /
       filters:
+      # Need to specify the URLRewrite here. The URLRewrite set on the parent route, although correctly configured on the proxy,
+      # will prevent the APIDoc from being stitched by the Portal controller.
       - type: URLRewrite
         urlRewrite:
           path:
             type: ReplacePrefixMatch
             replacePrefixMatch: /
       backendRefs:
-      - group: gateway.networking.k8s.io
-        kind: HTTPRoute
-        name: tracks
+      - name: tracks-rest-api-1-0
         namespace: tracks
+        port: 5000
+      # backendRefs:
+      # - group: gateway.networking.k8s.io
+      #   kind: HTTPRoute
+      #   name: tracks
+      #   namespace: tracks

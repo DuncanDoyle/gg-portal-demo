@@ -57,6 +57,19 @@ kubectl create secret generic https \
   --namespace gloo-system
 kubectl label secret https gateway=https --namespace gloo-system
 
+# ddoyle: Using "tls" instead of "generic"
+printf "\nCreate the K8S HTTPS secret.\n"
+kubectl create secret tls https \
+  --from-file=tls.key=gateway.key \
+  --from-file=tls.crt=gateway.crt \
+  --dry-run=client -oyaml | kubectl apply -f- \
+  --namespace ingress-gw
+kubectl label secret https gateway=https --namespace ingress-gw
+
+
+
+
+
 popd
 rm -rf tls
 

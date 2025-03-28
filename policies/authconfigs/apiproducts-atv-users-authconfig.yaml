@@ -1,0 +1,19 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: apiproducts-atv-users
+  namespace: gloo-system
+spec:
+  configs:
+    - name: oauth2
+      oauth2:
+        accessTokenValidation:
+          jwt:
+            remoteJwks:
+              url: http://keycloak.example.com/realms/gloo-demo/protocol/openid-connect/certs
+    # - name: opa
+    #   opaAuth:
+    #     modules:
+    #       - name: apis
+    #         namespace: gloo-system
+    #     query: "data.test.result"
