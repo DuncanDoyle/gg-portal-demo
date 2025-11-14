@@ -1,0 +1,26 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: routeoption-apiproducts
+  namespace: gloo-system
+spec:
+  options:
+    extauth:
+      configRef:
+        name: apiproducts-apikey
+        namespace: gloo-system
+    cors:
+      allowCredentials: true
+      allowHeaders:
+      - "*"
+      allowMethods:
+      - GET
+      - OPTIONS
+      allowOriginRegex:
+      - ".*"
+    # Rate limit configuration
+    # ddoyle: Need to figure out how to do RLConfig which can be later migrated to portal.
+    # rateLimitConfigs:
+    #   refs:
+    #   - name: apiproducts-dynamic
+    #     namespace: gloo-system
