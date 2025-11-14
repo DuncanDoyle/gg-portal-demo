@@ -86,6 +86,8 @@ gateway-portal-web-server:
   # SPI that integrates with the IDP/OP
   glooPortalServer:
     idpServerUrl: http://idp-connect.gloo-system.svc.cluster.local
+    database:
+      type: postgres
 
 global:
   extensions:
