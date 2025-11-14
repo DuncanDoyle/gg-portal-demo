@@ -17,6 +17,8 @@ spec:
     namespace: petstore
   - name: lambda
     namespace: gloo-system
+  - name: "*"
+    namespace: quarkus
   # portalBackendSelectors:
   #   - selector:
   #       namespace: gloo-system

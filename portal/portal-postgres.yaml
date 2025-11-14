@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-postgres
+  namespace: gloo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal-postgres
+  template:
+    metadata:
+      labels:
+        app: portal-postgres
+    spec:
+      containers:
+        - name: postgres
+          # image: postgres:13
+          image: postgres:17.6
+          ports:
+            - containerPort: 5432
+          envFrom:
+          - secretRef:
+              name: portal-postgres-credentials
+          # env:
+          #   - name: POSTGRES_DB
+          #     value: "db"
+          #   - name: POSTGRES_USER
+          #     value: "user"
+          #   - name: POSTGRES_PASSWORD
+          #     value: "pass"
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+      volumes:
+        # - name: postgres-storage
+        #   emptyDir: {}
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: portal-postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-postgres
+  namespace: gloo-system
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: portal-postgres

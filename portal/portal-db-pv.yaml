@@ -1,0 +1,32 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: portal-postgres-pv
+  namespace: gloo-system
+  labels:
+    type: local
+    app: portal-postgres
+spec:
+  storageClassName: "standard"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mnt/portal/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: portal-postgres-pvc
+  namespace: gloo-system
+  labels:
+    app: portal-postgres
+spec:
+  storageClassName: "standard"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
