@@ -1,0 +1,14 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: apiproducts-apikey
+  namespace: gloo-system
+spec:
+  configs:
+  - apiKeyAuth:
+      # This is the name of the header that is expected to contain the API key.
+      # This field is optional and defaults to `api-key` if not present.
+      headerName: api-key
+      # They API-Keys we validate the incoming API-Key against are selected using this labelSelector.
+      labelSelector:
+        team: infrastructure

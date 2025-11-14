@@ -1,0 +1,85 @@
+apiVersion: gateway.solo.io/v1
+kind: ListenerOption
+metadata:
+  name: access-logs
+  namespace: ingress-gw
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: gw
+  options:
+    accessLoggingService:
+      accessLog:
+      - openTelemetryService:
+          logName: gloo-portal
+          collector:
+            endpoint: opentelemetry-collector-gloo-gateway.monitoring.svc.cluster.local:4317
+            insecure: true
+          body: { 
+                  kvlist_value: { 
+                    values : [
+                      { key : timestamp,  value : { string_value : "%START_TIME%"}},
+                      { key : server_name,  value : { string_value : "%REQ(:AUTHORITY)%"}},
+                      { key : response_duration,  value : { string_value : "%DURATION%"}},
+                      { key : request_command,  value : { string_value : "%REQ(X-ENVOY-ORIGINAL-METHOD?:METHOD)%"}},
+                      { key : request_uri,  value : { string_value : "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"}},
+                      { key : request_protocol,  value : { string_value : "%PROTOCOL%"}},
+                      { key : status_code,  value : { string_value : "%RESPONSE_CODE%"}},
+                      { key : client_address,  value : { string_value : "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"}},
+                      { key : x_forwarded_for,  value : { string_value : "%REQ(X-FORWARDED-FOR)%"}},
+                      { key : bytes_sent,  value : { string_value : "%BYTES_SENT%"}},
+                      { key : bytes_received,  value : { string_value : "%BYTES_RECEIVED%"}},
+                      { key : user_agent,  value : { string_value : "%REQ(USER-AGENT)%"}},
+                      { key : downstream_local_address,  value : { string_value : "%DOWNSTREAM_LOCAL_ADDRESS%"}},
+                      { key : requested_server_name,  value : { string_value : "%REQUESTED_SERVER_NAME%"}},
+                      { key : request_id,  value : { string_value : "%REQ(X-REQUEST-ID)%"}},
+                      { key : response_flags,  value : { string_value : "%RESPONSE_FLAGS%"}},
+                      { key : route_name,  value : { string_value : "%ROUTE_NAME%"}},
+                      { key : upstream_cluster,  value : { string_value : "%UPSTREAM_CLUSTER%"}},
+                      { key : upstream_host,  value : { string_value : "%UPSTREAM_HOST%"}},
+                      { key : upstream_local_address,  value : { string_value : "%UPSTREAM_LOCAL_ADDRESS%"}},
+                      { key : upstream_service_time,  value : { string_value : "%REQ(x-envoy-upstream-service-time)%"}},
+                      { key : upstream_transport_failure_reason,  value : { string_value : "%UPSTREAM_TRANSPORT_FAILURE_REASON%"}},
+                      { key : correlation_id,  value : { string_value : "%REQ(X-CORRELATION-ID)%"}},
+                      { key : user_id,  value : { string_value : "%DYNAMIC_METADATA(envoy.filters.http.ext_authz:userId)%"}},
+                      { key : api_product_id,  value : { string_value : "%DYNAMIC_METADATA(io.solo.gloo.portal:api_product_id)%"}},
+                      { key : api_product_name,  value : { string_value : "%DYNAMIC_METADATA(io.solo.gloo.portal:api_product_name)%"}},
+                      { key : api_version,  value : { string_value : "%DYNAMIC_METADATA(io.solo.gloo.portal:api_version)%"}},
+                      { key : custom_metadata-api_category,  value : { string_value : "%DYNAMIC_METADATA(io.solo.gloo.portal.custom_metadata:api-category)%"}},
+                      { key : custom_metadata-pii_sensitive,  value : { string_value : "%DYNAMIC_METADATA(io.solo.gloo.portal.custom_metadata:pii-sensitive)%"}}
+                    ]
+                  }
+                }
+          # body: { string_value: "protocol: %PROTOCOL%" }
+           
+#       timestamp: "%START_TIME%"
+#       server_name: "%REQ(:AUTHORITY)%"
+#       response_duration: "%DURATION%"
+#       request_command: "%REQ(X-ENVOY-ORIGINAL-METHOD?:METHOD)%"
+#       request_uri: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+#       request_protocol: "%PROTOCOL%"
+#       status_code: "%RESPONSE_CODE%"
+#       client_address: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+#       x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+#       bytes_sent: "%BYTES_SENT%"
+#       bytes_received: "%BYTES_RECEIVED%"
+#       user_agent: "%REQ(USER-AGENT)%"
+#       downstream_local_address: "%DOWNSTREAM_LOCAL_ADDRESS%"
+#       requested_server_name: "%REQUESTED_SERVER_NAME%"
+#       request_id: "%REQ(X-REQUEST-ID)%"
+#       response_flags: "%RESPONSE_FLAGS%"
+#       route_name: "%ROUTE_NAME%"
+#       upstream_cluster: "%UPSTREAM_CLUSTER%"
+#       upstream_host: "%UPSTREAM_HOST%"
+#       upstream_local_address: "%UPSTREAM_LOCAL_ADDRESS%"
+#       upstream_service_time: "%REQ(x-envoy-upstream-service-time)%"
+#       upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+#       correlation_id: "%REQ(X-CORRELATION-ID)%"
+#       user_id: "%DYNAMIC_METADATA(envoy.filters.http.ext_authz:userId)%"
+#       api_product_id: "%DYNAMIC_METADATA(io.solo.gloo.portal:api_product_id)%"
+#       api_product_name: "%DYNAMIC_METADATA(io.solo.gloo.portal:api_product_name)%"
+#       api_version: "%DYNAMIC_METADATA(io.solo.gloo.portal:api_version)%"
+#       custom_metadata-api_category: "%DYNAMIC_METADATA(io.solo.gloo.portal.custom_metadata:api-category)%"
+#       custom_metadata-pii_sensitive: "%DYNAMIC_METADATA(io.solo.gloo.portal.custom_metadata:pii-sensitive)%"              
+    
