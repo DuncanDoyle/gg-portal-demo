@@ -2,7 +2,7 @@
 
 pushd ..
 
-#----------------------------------------- ApiProducts - OAuth -----------------------------------------
+#----------------------------------------- ApiProducts - APIKey -----------------------------------------
 
 kubectl apply -f policies/authconfigs/apiproducts-apikey-portalauth-authconfig.yaml
 kubectl apply -f policies/ratelimitconfigs/apiproducts-dynamic-rl.yaml
