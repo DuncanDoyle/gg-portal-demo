@@ -1,0 +1,24 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiProduct
+metadata:
+  labels:
+    expose-portal: "true"
+  name: quarkus
+  namespace: quarkus
+spec:
+  id: quarkus-svc
+  displayName: Quarkus Service v1
+  customMetadata:
+    image: <url>
+    pii-sensitive: "true"
+    api-category: "demo"
+  versions:
+    - apiVersion: "v1"
+      targetRefs:
+      - name: quarkus-apiproduct
+        namespace: quarkus
+        group: gateway.networking.k8s.io
+        kind: HTTPRoute
+      openapiMetadata:
+      customMetadata:
+          phase: supported

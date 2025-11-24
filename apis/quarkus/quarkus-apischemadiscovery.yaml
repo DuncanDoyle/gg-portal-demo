@@ -1,0 +1,20 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: ApiSchemaDiscovery
+metadata:
+  name: quarkus-apischemadiscovery
+  namespace: quarkus
+spec:
+  openapi:
+    fetchEndpoint:
+      url: http://quarkus.quarkus.svc.cluster.local:8080/q/openapi
+      retryDelay: "1s"
+      pullAttempts: 30
+      useBackoff: false
+  servedBy:
+    - targetRef:
+        group: ""
+        kind: Service
+        name: quarkus
+        namespace: quarkus
+        
+      
