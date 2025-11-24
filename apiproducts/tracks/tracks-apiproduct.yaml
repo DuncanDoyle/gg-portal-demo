@@ -12,7 +12,7 @@ spec:
   customMetadata:
     image: <url>
     pii-sensitive: "true"
-    api-category: "demo"
+    api-category: "prod"
   versions:
     - apiVersion: "1.0"
       targetRefs:
@@ -56,6 +56,7 @@ spec:
           This Catstronauts REST API License ("License") is a legal agreement between you (either an individual or a legal entity) and solo.io ("Provider") for the use of the Catstronauts REST API ("API").
       customMetadata:
           phase: supported
+
 
 
 
