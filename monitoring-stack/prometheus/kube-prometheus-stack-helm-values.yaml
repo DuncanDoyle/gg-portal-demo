@@ -1,0 +1,61 @@
+prometheus:
+  kubelet:
+    # cAdvisorMetricRelabelings: '[]'
+    serviceMonitor:
+      cAdvisor: false
+  kubeApiServer:
+    enabled: false
+  prometheusSpec:
+    enableFeatures:
+      - native-histograms
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    enableRemoteWriteReceiver: true
+    # ddoyle: No need to write to remote Thanos instance.
+    # remoteWrite:
+    # - url: http://thanos-receive.monitoring.svc.cluster.local:19291/api/v1/receive
+    #   sendNativeHistograms: true
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+    additionalScrapeConfigs:
+      - job_name: gloo-native-histograms
+        kubernetes_sd_configs:
+        - role: pod
+        relabel_configs:
+          - action: keep
+            regex: gloo-mesh-mgmt-server|gloo-mesh-agent|gloo-insights-engine|gloo-mesh-analyzer
+            source_labels:
+            - __meta_kubernetes_pod_label_app
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - action: replace
+            source_labels:
+            - __meta_kubernetes_pod_ip
+            - __meta_kubernetes_pod_annotation_prometheus_io_port
+            separator: ':'
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kube_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: pod
+        metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: gloo_.+_translation_.+|gloo_.+_reconciler_.+
+            action: keep
+grafana:
+  enabled: false

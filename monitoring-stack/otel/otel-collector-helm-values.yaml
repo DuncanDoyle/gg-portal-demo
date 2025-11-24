@@ -1,0 +1,167 @@
+mode: deployment
+image:
+  repository: otel/opentelemetry-collector-contrib
+command:
+  name: otelcol-contrib
+clusterRole:
+  create: true
+  rules:
+  - apiGroups:
+    - ''
+    resources:
+    - 'pods'
+    - 'nodes'
+    verbs:
+    - 'get'
+    - 'list'
+    - 'watch'
+ports:
+  promexporter:
+    enabled: true
+    containerPort: 9099
+    servicePort: 9099
+    protocol: TCP
+resources:
+  requests:
+    memory: 4Gi
+  limits:
+    memory: 4Gi
+config:
+  receivers:
+    prometheus/gloo:
+      config:
+        scrape_configs:
+        # Scrape the Gloo pods
+        - job_name: gloo-controlplane
+          honor_labels: true
+          kubernetes_sd_configs:
+          - role: pod
+            selectors:
+            - role: pod
+          relabel_configs:
+            - action: keep
+              regex: gloo
+              source_labels:
+              - __meta_kubernetes_pod_label_gloo
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_pod_ip
+              - __meta_kubernetes_pod_annotation_prometheus_io_port
+              separator: ':'
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kube_namespace
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: pod
+    prometheus/kube-gateway:
+      config:
+        scrape_configs:
+        # Scrape the Gloo pods
+        - job_name: gloo-gateways
+          honor_labels: true
+          kubernetes_sd_configs:
+          - role: pod
+            selectors:
+            - role: pod
+          relabel_configs:
+            - action: keep
+              regex: kube-gateway|gateway-proxy
+              source_labels:
+              - __meta_kubernetes_pod_label_gloo
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_pod_ip
+              - __meta_kubernetes_pod_annotation_prometheus_io_port
+              separator: ':'
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kube_namespace
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: pod
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              action: keep
+              regex: envoy_cluster_membership_total|envoy_cluster_upstream_cx_total|envoy_cluster_upstream_cx_connect_fail|envoy_cluster_upstream_cx_active|envoy_cluster_upstream_cx_rx_bytes_total|envoy_cluster_upstream_cx_tx_bytes_total|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_time_bucket|envoy_server_hot_restart_epoch|envoy_http_rq_total|envoy_cluster_ext_authz_denied_total|envoy_cluster_ratelimit_failure_mode_allowed_total
+    prometheus/ztunnel:
+      config:
+        scrape_configs:
+        - job_name: ztunnel
+          honor_labels: true
+          kubernetes_sd_configs:
+          - role: pod
+            selectors:
+            - role: pod
+          relabel_configs:
+            - action: keep
+              regex: ztunnel
+              source_labels:
+              - __meta_kubernetes_pod_label_app
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_pod_ip
+              - __meta_kubernetes_pod_annotation_prometheus_io_port
+              separator: ':'
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kube_namespace
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: pod
+    # Access Log receiver
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+  exporters:
+    prometheus:
+      endpoint: 0.0.0.0:9099
+    debug:
+      # detailed = debug, normal = info, basic= warn|error|dpanic|panic|fatal
+      # see: https://github.com/open-telemetry/opentelemetry-collector/issues/11337
+      verbosity: detailed
+  service:
+    pipelines:
+      metrics:
+        receivers:
+          - prometheus/gloo
+          - prometheus/kube-gateway
+          - prometheus/ztunnel
+        processors: [batch]
+        exporters: [prometheus]
+      # Access Log pipeline
+      logs: 
+        receivers: [otlp]
+        processors: []
+        exporters: [debug]

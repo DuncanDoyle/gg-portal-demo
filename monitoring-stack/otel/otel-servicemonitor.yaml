@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  # labels:
+  #   serviceMonitorSelector: prometheus
+  name: otel-monitor
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 30s
+    targetPort: 9099
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: opentelemetry-collector
