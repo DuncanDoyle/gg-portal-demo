@@ -72,7 +72,8 @@ Run the following 2 scripts to setup the `gloo-demo` and `portal-mgmt` Keycloak 
 Retrieve OAuth access-token:
 
 ```
-export CLIENT_SECRET=2w9lLALwNDP2Drh40rC764hnMNIp7Kdo
+export CLIENT_ID=493e5d54-f7d4-4dd1-afb8-372a74533394
+export CLIENT_SECRET=jIM1qdNYKlxlzfMMBSMKtdivx7fhXzbp
 
 export ACCESS_TOKEN=$(curl --request POST \
     --url 'http://keycloak.example.com/realms/portal-mgmt/protocol/openid-connect/token' \
