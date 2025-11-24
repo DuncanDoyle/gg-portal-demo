@@ -13,6 +13,7 @@ spec:
       - path:
           type: PathPrefix
           value: /
+        # method: GET
       filters:
       # Need to specify the URLRewrite here. The URLRewrite set on the parent route, although correctly configured on the proxy,
       # will prevent the APIDoc from being stitched by the Portal controller.
