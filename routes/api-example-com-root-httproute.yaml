@@ -64,6 +64,7 @@ spec:
     - path:
         type: PathPrefix
         value: /httpbin/v1.0/
+      # method: GET
     filters:
     # The URLRewrite in the parent technically works (from a "proxy perspective"), 
     # but the Portal will not correctly stitch the schema if we do not set on the child route as well.
@@ -89,7 +90,7 @@ spec:
         value: /lambda/
     filters:
     # The URLRewrite in the parent technically works (from a "proxy perspective"), 
-    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.c
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.
     - type: URLRewrite
       urlRewrite:
         path:
@@ -129,3 +130,26 @@ spec:
       kind: HTTPRoute
       name: petstore-apiproduct
       namespace: petstore
+  - matches:  
+    - path:
+        type: PathPrefix
+        value: /quarkus/
+    filters:
+    # The URLRewrite in the parent technically works (from a "proxy perspective"), 
+    # but the Portal will not correctly stitch the schema if we do not set on the child route as well.c
+    # - type: URLRewrite
+    #   urlRewrite:
+    #     path:
+    #       type: ReplacePrefixMatch
+    #       replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: routeoption-apiproducts
+    backendRefs:
+    # Delegate to another HTTPRoute
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: quarkus-apiproduct
+      namespace: quarkus
