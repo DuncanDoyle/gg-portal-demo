@@ -7,7 +7,7 @@ metadata:
   name: petstore
   namespace: petstore
 spec:
-  id: Petstore
+  id: petstore
   displayName: Petstore REST API
   customMetadata:
     image: <url>
