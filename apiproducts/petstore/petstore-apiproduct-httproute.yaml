@@ -8,13 +8,6 @@ metadata:
   annotations:
     delegation.gateway.solo.io/inherit-parent-matcher: "true"
 spec:
-  # parentRefs:
-  #   - name: gw
-  #     namespace: ingress-gw
-  #     # Bind to a specific listener in the parentRef (Gateway) using sectionName field.
-  #     # sectionName: foos
-  # hostnames:
-  #   - "petstore.example.com"
   rules:
     - matches:  
       - path:
