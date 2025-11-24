@@ -13,7 +13,7 @@ spec:
     namespace: httpbin
   - name: "*"
     namespace: tracks
-  - name: "*"
+  - name: petstore
     namespace: petstore
   - name: lambda
     namespace: gloo-system
